@@ -20,7 +20,7 @@ That's the conditional way of checking whether or not to enforce this password v
 ```ruby
   def update
     user = User.find(params[:id])
-    if !params[:user][:password].blank?
+    if !params[:user][:password].blank? # I only do this check to provide a more informative notice on the show page
       puts "NEW PASSWORD"
       if user.update( user_params )
         redirect_to user_path, id: user.id, notice: 'Password and Info Updated!'
