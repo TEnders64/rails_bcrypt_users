@@ -1,0 +1,23 @@
+<h1>All Users</h1>
+<table>
+    <thead>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Password</th>
+        <th>Created</th>
+        <th>Updated</th>
+    </thead>
+    <tbody>
+        <% @users.each do |u| %>
+        <tr>
+            <td><%= u.id %></td>
+            <td><%= link_to u.name, user_path(u) %></td>
+            <td><%= u.email %></td>
+            <td><%= u.password_digest %></td>
+            <td><%= u.created_at.strftime('%c') %></td>
+            <td><%= u.updated_at.strftime('%c') %></td>
+        </tr>
+        <% end %>
+    </tbody>
+</table>
