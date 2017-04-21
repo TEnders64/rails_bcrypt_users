@@ -1,28 +1,57 @@
-== README
+## Rails BCrypt Users
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+What I wanted to look into was beyond Login and Registration features when using BCrypt.
 
-Things you may want to cover:
+What if users want to update their passwords?
+What if users want to update their information without updating their passwords?
+Would we have to worry about BCrypt and our private user_params getting in the way of updates?
+Well, BCrypt has_secure_password only works on create, so by having a minimum length for password validations on top of has_secure_password doing all of its password_confirmation matching and such, we can then turn off and on the ability to validate a user's password when they want to do an update to their password. Otherwise, I can leave the password out of it.
 
-* Ruby version
+The kicker is in the model file. validates :password, presence: true, length: {minimum: 8}, if: "!password.nil?"
 
-* System dependencies
+That's the conditional way of checking whether or not to enforce this password validation. Bcrypt's validation does the majority of the work checking for presence and confirmation fields. This way, if someone trying to do a password change after having already registered, will only be under the scrutiny of this validation if they so choose to enter a new password.
 
-* Configuration
+#### users.rb
+```ruby
+  def update
+    user = User.find(params[:id])
+    if !params[:user][:password].blank?
+      puts "NEW PASSWORD"
+      if user.update( user_params )
+        redirect_to user_path, id: user.id, notice: 'Password and Info Updated!'
+      else
+        flash[:errors] = user.errors.full_messages
+        redirect_to edit_path, id: user.id 
+      end
+    else 
+      puts "NO PASSWORD CHANGE"
+      if user.update( user_params )
+        redirect_to user_path, id: user.id, notice: 'Name and/or Email Updated!'
+      else
+        flash[:errors] = user.errors.full_messages        
+        redirect_to edit_path, id: user.id 
+      end
+    end
+  end
 
-* Database creation
+  private
+    def user_params
+      params.require(:user).permit(:name, :email, :password, :password_confirmation)
+    end
+```
 
-* Database initialization
+#### user.rb
+```ruby
+class User < ActiveRecord::Base
+  has_secure_password
+  EMAIL_REGEX = /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]+)\z/i
 
-* How to run the test suite
+  validates :name, presence: true, length: {minimum: 2}
+  validates :email, presence: true, format: {with: EMAIL_REGEX}, uniqueness: true
+  validates :password, presence: true, length: {minimum: 8}, if: "!password.nil?" # <- that's the conditional way of checking whether or not to enforce this password validation. bcrypt's validation up above does the majority of the work
 
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
-
-
-Please feel free to use a different markup language if you do not plan to run
-<tt>rake doc:app</tt>.
+  before_save :email_lowercase
+  def email_lowercase
+    self.email.downcase!
+  end
+end
