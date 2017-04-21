@@ -41,7 +41,7 @@ That's the conditional way of checking whether or not to enforce this password v
     end
 ```
 
-#### user.rb
+#### [user.rb](https://github.com/TEnders64/rails_bcrypt_users/blob/master/app/models/user.rb)
 ```ruby
 class User < ActiveRecord::Base
   has_secure_password
