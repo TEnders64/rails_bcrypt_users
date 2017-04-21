@@ -1,11 +1,16 @@
 <h1>Edit <%= @user.name %></h1>
+<% if flash[:errors] %>
+    <% flash[:errors].each do |e| %>
+        <p><%= e %></p>
+    <% end %>
+<% end %>
 <%= form_for @user do |f| %>
     <%= f.label :name %>
     <%= f.text_field :name %>
     <%= f.label :email %>
     <%= f.text_field :email %>
-<button class="password_change" type="button">Edit Password</button>
-<div id="password_change" hidden>
+<button id="password_change" type="button">Edit Password</button>
+<div class="password_change" hidden>
     <%= f.label :password, 'New Password' %>
     <%= f.password_field :password %>
     <%= f.label :password_confirmation, 'New Password Confirmation' %>
@@ -13,4 +18,11 @@
 </div>
     <%= f.submit 'Update' %>
 <% end %>
+<script>
+$('#password_change').click(function(){
+    console.log('hey hey hey');
+    $('.password_change').toggle();
+    $(this).hide();
+}); 
+</script>
     

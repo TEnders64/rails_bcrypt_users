@@ -4,7 +4,7 @@ class User < ActiveRecord::Base
 
   validates :name, presence: true, length: {minimum: 2}
   validates :email, presence: true, format: {with: EMAIL_REGEX}, uniqueness: true
-  validates :password, presence: true, length: {minimum: 8}, on: :create, if: "!password.nil?"
+  validates :password, presence: true, length: {minimum: 8}, if: "!password.nil?"
 
   before_save :email_lowercase
   def email_lowercase

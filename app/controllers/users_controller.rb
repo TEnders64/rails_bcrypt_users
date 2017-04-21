@@ -24,15 +24,17 @@ class UsersController < ApplicationController
     if !params[:user][:password].blank?
       puts "NEW PASSWORD"
       if user.update( user_params )
-        redirect_to user_path, id: user.id
+        redirect_to user_path, id: user.id, notice: 'Password and Info Updated!'
       else
+        flash[:errors] = user.errors.full_messages
         redirect_to edit_path, id: user.id 
       end
     else 
       puts "NO PASSWORD CHANGE"
-      if user.update( update_user_params_no_pw )
-        redirect_to user_path, id: user.id
+      if user.update( user_params )
+        redirect_to user_path, id: user.id, notice: 'Name and/or Email Updated!'
       else
+        flash[:errors] = user.errors.full_messages        
         redirect_to edit_path, id: user.id 
       end
     end
@@ -45,9 +47,5 @@ class UsersController < ApplicationController
   private
   def user_params
     params.require(:user).permit(:name, :email, :password, :password_confirmation)
-  end
-
-  def update_user_params_no_pw
-    params.require(:user).permit(:name, :email)
   end
 end
