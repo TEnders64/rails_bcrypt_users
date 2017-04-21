@@ -12,7 +12,11 @@ The kicker is in the model file. ```validates :password, presence: true, length:
 
 That's the conditional way of checking whether or not to enforce this password validation. Bcrypt's validation does the majority of the work checking for presence and confirmation fields. This way, if someone trying to do a password change after having already registered, will only be under the scrutiny of this validation if they so choose to enter a new password.
 
-#### users.rb
+#### [views/users/edit.html.erb](https://github.com/TEnders64/rails_bcrypt_users/blob/master/app/views/users/edit.html.erb)
+![Edit a User](https://github.com/TEnders64/rails_bcrypt_users/blob/master/BCrypt_Users.png)
+
+
+#### [users.rb](https://github.com/TEnders64/rails_bcrypt_users/blob/master/app/controllers/users.rb)
 ```ruby
   def update
     user = User.find(params[:id])
