@@ -10,7 +10,7 @@ Well, BCrypt `has_secure_password` only works on create, so by having a minimum 
 
 The kicker is in the model file. ```validates :password, presence: true, length: {minimum: 8}, if: "!password.nil?"```
 
-That's the conditional way of checking whether or not to enforce this password validation. Bcrypt's validation does the majority of the work checking for presence and confirmation fields. This way, if someone trying to do a password change after having already registered, will only be under the scrutiny of this validation if they so choose to enter a new password.
+That's the [conditional way](http://guides.rubyonrails.org/active_record_validations.html#conditional-validation) of checking whether or not to enforce this password validation. Bcrypt's validation does the majority of the work checking for presence and confirmation fields. This way, if someone trying to do a password change after having already registered, will only be under the scrutiny of this validation if they so choose to enter a new password.
 
 #### [views/users/edit.html.erb](https://github.com/TEnders64/rails_bcrypt_users/blob/master/app/views/users/edit.html.erb)
 ![Edit a User](https://github.com/TEnders64/rails_bcrypt_users/blob/master/BCrypt_Users.png)
